@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 const request = require('request');
 const express = require('express');
 const path = require('path');
-const Option = require('./database'); 
+const { sequelize, Option } = require('./database'); 
 
 const app = express();
 
@@ -14,12 +14,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/favicon.ico', (req, res) => res.status(204));
 
-app.get('/fetch-options', (req, res) => {
+app.get('/fetch-options', async (req, res) => {
     request.get({
         url: url,
         json: true,
         headers: { 'User-Agent': 'request' }
-    }, (err, response, data) => {
+    }, async (err, response, data) => {
         if (err) {
             console.error('Error:', err);
             return res.status(500).send('Error fetching data');
@@ -28,24 +28,31 @@ app.get('/fetch-options', (req, res) => {
             return res.status(response.statusCode).send('Error fetching data');
         } else {
             console.log('Server: Full API Response:', data);
-            const optionsData = data.options;
+            const optionsData = data.data;
 
-            if (!optionsData || optionsData.length === 0) {
-                console.log('No options data found');
-                return res.status(404).send('No options data found');
+            if (!optionsData || !Array.isArray(optionsData)) {
+                console.log('Invalid options data format:', optionsData);
+                return res.status(404).send('No valid options data found');
             }
 
-            optionsData.forEach(async option => {
-                await Option.create({
-                    type: option.type,
-                    strike: option.strike,
-                    expiration: new Date(option.expiration),
-                    bid: option.bid,
-                    ask: option.ask
-                });
-            });
-
-            res.json(optionsData);
+            try {
+                await sequelize.sync();
+                for (const option of optionsData) {
+                    const created = await Option.create({
+                        type: option.type,
+                        strike: option.strike,
+                        expiration: new Date(option.expiration),
+                        bid: option.bid,
+                        ask: option.ask,
+                        open_interest: option.open_interest,
+                    });
+                    console.log('Inserted option:', created.toJSON());
+                }
+                res.json(optionsData);
+            } catch (insertionError) {
+                console.error('Error inserting options:', insertionError);
+                res.status(500).send('Error inserting options');
+            }
         }
     });
 });
@@ -59,19 +66,10 @@ app.listen(1000, () => {
 
 
 
-/// runApi use /// code from alphavantage.
-
-// fix api put api code in a listener. app post
-
-/// side page to execute app post, puts data in database
-
-// app post is running api.
-
-// once successful then run
 
 // check too see if my data is uploading into my databse
 
 // check too see if i can use my api url against line 4 in script.js
 
-//
+// react native --- xpo
 

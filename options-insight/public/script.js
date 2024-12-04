@@ -29,7 +29,7 @@ function fetchData() {
 }
 
 function displayData(data) {
-    console.log('Displaying data...'); 
+    console.log('Displaying data...');
     const tableBody = document.querySelector('#optionsTable tbody');
     tableBody.innerHTML = '';
 
@@ -62,11 +62,11 @@ function displayData(data) {
         row.appendChild(askCell);
 
         const volumeCell = document.createElement('td');
-        volumeCell.textContent = option.volume;
+        volumeCell.textContent = option.volume; 
         row.appendChild(volumeCell);
 
         const open_interestCell = document.createElement('td');
-        open_interestCell.textContent = option.open_interest;
+        open_interestCell.textContent = option.open_interest; 
         row.appendChild(open_interestCell);
 
         tableBody.appendChild(row);

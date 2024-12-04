@@ -1,35 +1,34 @@
 const { Sequelize, DataTypes } = require('sequelize');
+const path = require('path');
+
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'optionsDatabase.sqlite'
+    storage: path.join(__dirname, 'database.sqlite'),
 });
 
 const Option = sequelize.define('Option', {
     type: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
     strike: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
     },
     expiration: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
     },
     bid: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
     },
     ask: {
         type: DataTypes.FLOAT,
-        allowNull: false
-    }
+        allowNull: false,
+    },
+}, {
+    tableName: 'options',
 });
 
-sequelize.sync()
-    .then(() => {
-        console.log('Database & tables created.');
-    });
-
-module.exports = Option;
+module.exports = { sequelize, Option };
