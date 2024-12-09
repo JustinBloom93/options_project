@@ -14,6 +14,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/favicon.ico', (req, res) => res.status(204));
 
+//synch database schema
+sequelize.sync({ alter: true }).then(() => {
+    console.log('Database synchronized');
+}).catch(error => {
+    console.error('Error synching database:', error);
+});
+
 app.get('/fetch-options', async (req, res) => {
     request.get({
         url: url,
@@ -38,12 +45,18 @@ app.get('/fetch-options', async (req, res) => {
             try {
                 await sequelize.sync();
                 for (const option of optionsData) {
+
+                    console.log('Options:', option); //logging
+
+                    console.log('volume for option:', option.volume);
+                    
                     const created = await Option.create({
                         type: option.type,
                         strike: option.strike,
                         expiration: new Date(option.expiration),
                         bid: option.bid,
                         ask: option.ask,
+                        volume: option.volume,
                         open_interest: option.open_interest,
                     });
                     console.log('Inserted option:', created.toJSON());
@@ -64,6 +77,29 @@ app.get('/get-options', async (req, res) => {
     } catch (error) {
         console.error('Error fetching options from database:', error);
         res.status(500).send('Error fetching opptions from database');
+    }
+});
+
+app.get('/view-options', async (req, res) => {
+    try {
+        const options = await Option.findAll();
+        res.send(`<pre>${JSON.stringify(options, null, 2)}</pre`);
+    } catch (error) {
+        console.error('Error fetching options from database:', error);
+        res.status(500).send('Error fetching options from datavase');
+    }
+});
+
+app.get('/get-top-options', async (reg, res) => { // top 25 highest volume
+    try {
+        const options = await Option.findAll({
+            order: [['volume', 'DESC']],
+            limit: 25
+        });
+        res.json(options);
+    } catch (error) {
+        console.error('Error fetching options from database:', error);
+        res.status(500).send('Error fetching options from database');
     }
 });
 

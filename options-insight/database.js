@@ -27,6 +27,16 @@ const Option = sequelize.define('Option', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    volume: { // vol column
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0 // fixing error
+    },
+    open_interest: { //OI column
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0 //fixing error
+    },
 }, {
     tableName: 'options',
 });

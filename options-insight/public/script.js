@@ -1,10 +1,7 @@
-const apiKey = 'HRGPPJOD3YLEJF27'; 
-const symbol = 'IBM';
+function fetchTopOptions() {
+    console.log('Fetching top 25 options by volume...');
 
-function fetchData() {
-    console.log('Fetching data...');
-
-    fetch(`https://www.alphavantage.co/query?function=HISTORICAL_OPTIONS&symbol=${symbol}&apikey=${apiKey}`)
+    fetch('/get-top-options') // fetch instead of api
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
@@ -12,33 +9,28 @@ function fetchData() {
             return response.json();
         })
         .then(data => {
-            console.log('Data received:', data);
+            console.log('Top options data received:', data);
             console.log('Data type:', typeof data);
             console.log('Data content:', JSON.stringify(data, null, 2));
 
-            if (!data || !data.data || !Array.isArray(data.data)) {
-                console.error('Invalid data format:', data);
-                return;
-            }
-
-            displayData(data.data);
+            displayTopOptions(data);
         })
         .catch(error => {
-            console.error('Client Error fetching data:', error.message);
+            console.error('Client Error fetching top options:', error.message);
         });
 }
 
-function displayData(data) {
-    console.log('Displaying data...');
+function displayTopOptions(options) {
+    console.log('Displaying top 25 options by volume...');
     const tableBody = document.querySelector('#optionsTable tbody');
     tableBody.innerHTML = '';
 
-    if (!Array.isArray(data)) {
-        console.error('Data is not an array:', data);
+    if (!Array.isArray(options)) {
+        console.error('Data is not an array:', options);
         return;
     }
 
-    data.forEach(option => {
+    options.forEach(option => {
         const row = document.createElement('tr');
 
         const optionTypeCell = document.createElement('td');
@@ -62,20 +54,21 @@ function displayData(data) {
         row.appendChild(askCell);
 
         const volumeCell = document.createElement('td');
-        volumeCell.textContent = option.volume; 
+        volumeCell.textContent = option.volume;
         row.appendChild(volumeCell);
 
-        const open_interestCell = document.createElement('td');
-        open_interestCell.textContent = option.open_interest; 
-        row.appendChild(open_interestCell);
+        const openInterestCell = document.createElement('td');
+        openInterestCell.textContent = option.open_interest; // Ensure this field is correct
+        row.appendChild(openInterestCell);
 
         tableBody.appendChild(row);
     });
 
-    console.log('Data displayed.');
+    console.log('Top 25 options displayed.');
 }
 
-fetchData();
+// Initial fetch
+fetchTopOptions();
 
 
 

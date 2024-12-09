@@ -4,40 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Options Screener</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-    <h1>Options Insight </h1>
-    <table id="optionsTable">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Strike</th>
-                <th>Expiration</th>
-                <th>Bid</th>
-                <th>Ask</th>
-                <th>Volume</th>
-                <th>Open Interest</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    <script src="script.js"></script>
-</body>
-</html>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="my-4">Options Insight </h1>
+            <table class="table table-striped" id="optionsTable">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Strike</th>
+                        <th>Expiration</th>
+                        <th>Bid</th>
+                        <th>Ask</th>
+                        <th>Volume</th>
+                        <th>Open Interest</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <script src="script.js"></script>
+    </body>
+    </html>
 

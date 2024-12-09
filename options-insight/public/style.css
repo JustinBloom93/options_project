@@ -1,0 +1,21 @@
+body {
+    background-color: #e7eaed;
+}
+
+h1 {
+    text-align: center;
+    color: #071449;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.table th {
+    background-color: #02264d;
+    color: rgb(43, 148, 247);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(39, 135, 237, 0.699);
+}
