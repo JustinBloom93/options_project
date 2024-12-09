@@ -57,6 +57,16 @@ app.get('/fetch-options', async (req, res) => {
     });
 });
 
+app.get('/get-options', async (req, res) => {
+    try {
+        const options = await Option.findAll();
+        res.json(options);
+    } catch (error) {
+        console.error('Error fetching options from database:', error);
+        res.status(500).send('Error fetching opptions from database');
+    }
+});
+
 app.listen(1000, () => {
     console.log('Server is running on port 1000');
 });
