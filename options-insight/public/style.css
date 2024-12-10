@@ -5,10 +5,17 @@ body {
 h1 {
     text-align: center;
     color: #071449;
+    font-family: 'Arial', sans-serif;
 }
 
 .table {
     margin-top: 20px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+}
+
+.table th, .table td {
+    font-weight: bold;
 }
 
 .table th {
@@ -18,4 +25,7 @@ h1 {
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(39, 135, 237, 0.699);
+}
+.table-bordered td, .table-bordered th {
+    border: 1px solid #007bff; 
 }

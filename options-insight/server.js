@@ -7,7 +7,7 @@ const { sequelize, Option } = require('./database');
 const app = express();
 
 const apiKey = 'HRGPPJOD3YLEJF27'; 
-const symbol = 'IBM';
+const symbol = 'ADBE';
 const url = `https://www.alphavantage.co/query?function=HISTORICAL_OPTIONS&symbol=${symbol}&apikey=${apiKey}`;
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/favicon.ico', (req, res) => res.status(204));
 
 //synch database schema
-sequelize.sync({ alter: true }).then(() => {
+sequelize.sync().then(() => {
     console.log('Database synchronized');
 }).catch(error => {
     console.error('Error synching database:', error);
@@ -51,6 +51,7 @@ app.get('/fetch-options', async (req, res) => {
                     console.log('volume for option:', option.volume);
                     
                     const created = await Option.create({
+                        symbol: symbol,
                         type: option.type,
                         strike: option.strike,
                         expiration: new Date(option.expiration),

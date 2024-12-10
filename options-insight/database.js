@@ -7,6 +7,11 @@ const sequelize = new Sequelize({
 });
 
 const Option = sequelize.define('Option', {
+    symbol: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: '',
+    },
     type: {
         type: DataTypes.STRING,
         allowNull: false,

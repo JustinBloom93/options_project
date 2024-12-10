@@ -33,6 +33,10 @@ function displayTopOptions(options) {
     options.forEach(option => {
         const row = document.createElement('tr');
 
+        const symbolCell = document.createElement('td');
+        symbolCell.textContent = option.symbol;
+        row.appendChild(symbolCell);
+
         const optionTypeCell = document.createElement('td');
         optionTypeCell.textContent = option.type;
         row.appendChild(optionTypeCell);
