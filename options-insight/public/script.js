@@ -1,18 +1,16 @@
-function fetchTopOptions() {
-    console.log('Fetching top 25 options by volume...');
+let optionsData = [];
 
-    fetch('/get-top-options') // fetch instead of api
+function fetchTopOptions(symbol = 'ADBE') {
+    console.log(`Fetching top 25 options for ${symbol} by volume...`);
+
+    fetch(`/get-top-options?symbol=${symbol}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
+            if (!response.ok) throw new Error('Network response was not ok ' + response.statusText);
             return response.json();
         })
         .then(data => {
             console.log('Top options data received:', data);
-            console.log('Data type:', typeof data);
-            console.log('Data content:', JSON.stringify(data, null, 2));
-
+            optionsData = data;
             displayTopOptions(data);
         })
         .catch(error => {
@@ -21,49 +19,17 @@ function fetchTopOptions() {
 }
 
 function displayTopOptions(options) {
-    console.log('Displaying top 25 options by volume...');
-    const tableBody = document.querySelector('#optionsTable tbody');
+    const tableBody = document.getElementById('optionsTableBody');
     tableBody.innerHTML = '';
-
-    if (!Array.isArray(options)) {
-        console.error('Data is not an array:', options);
-        return;
-    }
 
     options.forEach(option => {
         const row = document.createElement('tr');
 
-        const symbolCell = document.createElement('td');
-        symbolCell.textContent = option.symbol;
-        row.appendChild(symbolCell);
-
-        const optionTypeCell = document.createElement('td');
-        optionTypeCell.textContent = option.type;
-        row.appendChild(optionTypeCell);
-
-        const strikePriceCell = document.createElement('td');
-        strikePriceCell.textContent = option.strike;
-        row.appendChild(strikePriceCell);
-
-        const expirationDateCell = document.createElement('td');
-        expirationDateCell.textContent = option.expiration;
-        row.appendChild(expirationDateCell);
-
-        const bidCell = document.createElement('td');
-        bidCell.textContent = option.bid;
-        row.appendChild(bidCell);
-
-        const askCell = document.createElement('td');
-        askCell.textContent = option.ask;
-        row.appendChild(askCell);
-
-        const volumeCell = document.createElement('td');
-        volumeCell.textContent = option.volume;
-        row.appendChild(volumeCell);
-
-        const openInterestCell = document.createElement('td');
-        openInterestCell.textContent = option.open_interest; // Ensure this field is correct
-        row.appendChild(openInterestCell);
+        ['symbol', 'type', 'strike', 'expiration', 'bid', 'ask', 'volume', 'open_interest'].forEach(field => {
+            const cell = document.createElement('td');
+            cell.textContent = option[field];
+            row.appendChild(cell);
+        });
 
         tableBody.appendChild(row);
     });
@@ -71,8 +37,20 @@ function displayTopOptions(options) {
     console.log('Top 25 options displayed.');
 }
 
-// Initial fetch
+function filterOptions(query) {
+    const filteredOptions = optionsData.filter(option => {
+        return option.symbol.toLowerCase().includes(query.toLowerCase()) ||
+               option.type.toLowerCase().includes(query.toLowerCase());
+    });
+    displayTopOptions(filteredOptions);
+}
+
+document.getElementById('searchInput').addEventListener('input', event => {
+    filterOptions(event.target.value);
+});
+
 fetchTopOptions();
+
 
 
 

@@ -10,8 +10,12 @@
     <body>
         <div class="container">
             <h1 class="my-4">Options Insight </h1>
-            <table class="table table-striped" id="optionsTable">
-                <thead>
+            <div class="form-group"> <!--search bar-->
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by symbol">
+                </div> <!--search bar-->
+            </div>
+            <table class="table table-striped table-bordered" id="optionsTable">
+                <thead class="thead-dark">
                     <tr>
                         <th>Symbol</th>
                         <th>Type</th>
@@ -23,7 +27,7 @@
                         <th>Open Interest</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="optionsTableBody">
 
                 </tbody>
             </table>
