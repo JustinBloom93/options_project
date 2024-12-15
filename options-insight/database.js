@@ -10,7 +10,6 @@ const Option = sequelize.define('Option', {
     symbol: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: '',
     },
     type: {
         type: DataTypes.STRING,
@@ -35,15 +34,14 @@ const Option = sequelize.define('Option', {
     volume: { // vol column
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0 // fixing error
     },
     open_interest: { //OI column
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0 //fixing error
     },
 }, {
     tableName: 'options',
+    indexes: []
 });
 
 module.exports = { sequelize, Option };

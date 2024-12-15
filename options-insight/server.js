@@ -7,8 +7,7 @@ const { sequelize, Option } = require('./database');
 const app = express();
 
 const apiKey = 'HRGPPJOD3YLEJF27'; 
-const symbol = 'ADBE';
-const url = `https://www.alphavantage.co/query?function=HISTORICAL_OPTIONS&symbol=${symbol}&apikey=${apiKey}`;
+const stockSymbols = ['SPY', 'AAPL', 'NVDA', 'MSFT', 'META'] ;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -21,30 +20,71 @@ sequelize.sync().then(() => {
     console.error('Error synching database:', error);
 });
 
-app.get('/fetch-options', (req, res) => {
-    request.get({
-        url: url,
-        json: true,
-        headers: { 'User-Agent': 'request' }
-    }, async (err, response, data) => {
-        if (err) return res.status(500).send('Error fetching data');
-        if (response.statusCode !== 200) return res.status(response.statusCode).send('Error fetching data');
-        
-        console.log('API Response:', JSON.stringify(data, null, 2));
-        const optionsData = data.data;
+app.get('/fetch-options', async (req, res) => {
+    try {
+        // Clear existing records first, may not be most optimal but its helps speed it up
+        await Option.destroy({ where: {} });
+        console.log('Existing data cleared.');
 
-        if (!optionsData || !Array.isArray(optionsData)) return res.status(404).send('No valid options data found');
+        const fetchPromises = stockSymbols.map(symbol => {
+            const url = `https://www.alphavantage.co/query?function=HISTORICAL_OPTIONS&symbol=${symbol}&apikey=${apiKey}`;
+            console.log(`Fetching data for ${symbol} from ${url}`);
 
-        try {
-            await Option.destroy({ where: {} }); // Delete all existing records
+            return new Promise((resolve, reject) => {
+                request.get({
+                    url: url,
+                    json: true,
+                    headers: { 'User-Agent': 'request' }
+                }, async (err, response, data) => {
+                    if (err) return reject(`Error fetching data for ${symbol}: ${err}`);
+                    if (response.statusCode !== 200) return reject(`Error fetching data for ${symbol}: status code ${response.statusCode}`);
+                    
+                    console.log(`API Response for ${symbol}:`, JSON.stringify(data, null, 2));
+                    const optionsData = data.data;
 
-            }
-            res.json(optionsData);
-        } catch (insertionError) {
-            console.error('Error inserting options:', insertionError);
-            res.status(500).send('Error inserting options');
-        }
-    });
+                    if (!optionsData || !Array.isArray(optionsData)) return reject(`No valid options data found for ${symbol}`);
+
+                    try {
+                        for (const option of optionsData) {
+                            const existingOption = await Option.findOne({
+                                where: {
+                                    symbol: symbol,
+                                    volume: option.volume
+                                }
+                            });
+
+                            if (!existingOption) {
+                                await Option.create({
+                                    symbol: symbol,
+                                    type: option.type,
+                                    strike: option.strike,
+                                    expiration: new Date(option.expiration),
+                                    bid: option.bid,
+                                    ask: option.ask,
+                                    volume: option.volume,
+                                    open_interest: option.open_interest,
+                                });
+                                console.log(`Inserted option: ${symbol} ${option.type} ${option.strike} ${option.expiration}`);
+                            } else {
+                                console.log(`Duplicate found, not inserting: ${symbol} ${option.type} ${option.strike} ${option.expiration}`);
+                            }
+                        }
+                        resolve();
+                    } catch (insertionError) {
+                        console.error(`Error inserting options for ${symbol}:`, insertionError);
+                        reject(`Error inserting options for ${symbol}`);
+                    }
+                });
+            });
+        });
+
+        await Promise.all(fetchPromises);
+        console.log('All data fetched and inserted for all symbols.');
+        res.send('Data fetched and inserted for all symbols.');
+    } catch (error) {
+        console.error('Error fetching options for one or more symbols:', error);
+        res.status(500).send('Error fetching options for one or more symbols');
+    }
 });
 
 
@@ -72,7 +112,7 @@ app.get('/get-top-options', async (reg, res) => { // top 25 highest volume
     try {
         const options = await Option.findAll({
             order: [['volume', 'DESC']],
-            limit: 25
+            limit: 150
         });
         res.json(options);
     } catch (error) {
@@ -84,16 +124,3 @@ app.get('/get-top-options', async (reg, res) => { // top 25 highest volume
 app.listen(1000, () => {
     console.log('Server is running on port 1000');
 });
-
-
-
-
-
-
-
-// check too see if my data is uploading into my databse
-
-// check too see if i can use my api url against line 4 in script.js
-
-// react native --- xpo
-

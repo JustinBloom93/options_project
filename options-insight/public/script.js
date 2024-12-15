@@ -1,9 +1,10 @@
 let optionsData = [];
 
-function fetchTopOptions(symbol = 'ADBE') {
-    console.log(`Fetching top 25 options for ${symbol} by volume...`);
+// Fetch data from the server and display it
+function fetchOptions() {
+    console.log('Fetching top 150 options by volume...');
 
-    fetch(`/get-top-options?symbol=${symbol}`)
+    fetch('/get-top-options')
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok ' + response.statusText);
             return response.json();
@@ -34,7 +35,12 @@ function displayTopOptions(options) {
         tableBody.appendChild(row);
     });
 
-    console.log('Top 25 options displayed.');
+    console.log('Top 150 options displayed.');
+}
+
+function startFetching() {
+    fetchOptions();
+    setInterval(fetchOptions, 300000);
 }
 
 function filterOptions(query) {
@@ -49,10 +55,5 @@ document.getElementById('searchInput').addEventListener('input', event => {
     filterOptions(event.target.value);
 });
 
-fetchTopOptions();
-
-
-
-
-
-//setInterval(fetchData, 15 * 60 * 1000);
+// Initial fetch for top options
+startFetching();
