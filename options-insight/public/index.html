@@ -6,33 +6,43 @@
     <title>Options Screener</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-    </head>
-    <body>
-        <div class="container">
-            <h1 class="my-4">Options Insight </h1>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fleur+De+Leah&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+        <h1 class="my-4">Options Insight </h1>
+        </header>
+        <main>
             <div class="form-group"> <!--search bar-->
-                <input type="text" id="searchInput" class="form-control" placeholder="Search by symbol">
-                </div> <!--search bar-->
-            </div>
-            <table class="table table-striped table-bordered" id="optionsTable">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Symbol</th>
-                        <th>Type</th>
-                        <th>Strike</th>
-                        <th>Expiration</th>
-                        <th>Bid</th>
-                        <th>Ask</th>
-                        <th>Volume</th>
-                        <th>Open Interest</th>
-                    </tr>
-                </thead>
-                <tbody id="optionsTableBody">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by symbol">
+            </div> <!--search bar-->
+    </div>
+        <table class="table table-striped table-bordered" id="optionsTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Symbol</th>
+                    <th>Type</th>
+                    <th>Strike</th>
+                    <th>Expiration</th>
+                    <th>Bid</th>
+                    <th>Ask</th>
+                    <th>Volume</th>
+                    <th>Open Interest</th>
+                </tr>
+            </thead>
+            <tbody id="optionsTableBody">
 
-                </tbody>
-            </table>
-        </div>
+            </tbody>
+        </table>
+        </main>
+            <footer>
+                <p>&copy; <strong>2024 Options Insight LLC</strong></p>
+            </footer>
+    </div>
         <script src="script.js"></script>
-    </body>
-    </html>
+</body>
+</html>
 
