@@ -21,55 +21,32 @@ sequelize.sync().then(() => {
     console.error('Error synching database:', error);
 });
 
-app.get('/fetch-options', async (req, res) => {
+app.get('/fetch-options', (req, res) => {
     request.get({
         url: url,
         json: true,
         headers: { 'User-Agent': 'request' }
     }, async (err, response, data) => {
-        if (err) {
-            console.error('Error:', err);
-            return res.status(500).send('Error fetching data');
-        } else if (response.statusCode !== 200) {
-            console.error('Status:', response.statusCode);
-            return res.status(response.statusCode).send('Error fetching data');
-        } else {
-            console.log('Server: Full API Response:', data);
-            const optionsData = data.data;
+        if (err) return res.status(500).send('Error fetching data');
+        if (response.statusCode !== 200) return res.status(response.statusCode).send('Error fetching data');
+        
+        console.log('API Response:', JSON.stringify(data, null, 2));
+        const optionsData = data.data;
 
-            if (!optionsData || !Array.isArray(optionsData)) {
-                console.log('Invalid options data format:', optionsData);
-                return res.status(404).send('No valid options data found');
+        if (!optionsData || !Array.isArray(optionsData)) return res.status(404).send('No valid options data found');
+
+        try {
+            await Option.destroy({ where: {} }); // Delete all existing records
+
             }
-
-            try {
-                await sequelize.sync();
-                for (const option of optionsData) {
-
-                    console.log('Options:', option); //logging
-
-                    console.log('volume for option:', option.volume);
-                    
-                    const created = await Option.create({
-                        symbol: symbol,
-                        type: option.type,
-                        strike: option.strike,
-                        expiration: new Date(option.expiration),
-                        bid: option.bid,
-                        ask: option.ask,
-                        volume: option.volume,
-                        open_interest: option.open_interest,
-                    });
-                    console.log('Inserted option:', created.toJSON());
-                }
-                res.json(optionsData);
-            } catch (insertionError) {
-                console.error('Error inserting options:', insertionError);
-                res.status(500).send('Error inserting options');
-            }
+            res.json(optionsData);
+        } catch (insertionError) {
+            console.error('Error inserting options:', insertionError);
+            res.status(500).send('Error inserting options');
         }
     });
 });
+
 
 app.get('/get-options', async (req, res) => {
     try {

@@ -1,10 +1,10 @@
 body {
-    background-color: #e7eaed;
+    background-color: #bec5cc;
 }
 
 h1 {
     text-align: center;
-    color: #071449;
+    color: #062085;
     font-family: 'Arial', sans-serif;
 }
 
@@ -19,13 +19,13 @@ h1 {
 }
 
 .table th {
-    background-color: #02264d;
-    color: rgb(43, 148, 247);
+    background-color: #097af2;
+    color: rgb(82, 169, 251);
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(39, 135, 237, 0.699);
+    background-color: rgba(7, 108, 223, 0.699);
 }
 .table-bordered td, .table-bordered th {
-    border: 1px solid #007bff; 
+    border: 1px solid #00050b; 
 }
