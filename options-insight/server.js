@@ -78,7 +78,7 @@ app.get('/fetch-options', async (req, res) => {
             });
         });
 
-        await Promise.all(fetchPromises);
+        await Promise.all(fetchPromises); // troubleshooting
         console.log('All data fetched and inserted for all symbols.');
         res.send('Data fetched and inserted for all symbols.');
     } catch (error) {
@@ -88,7 +88,7 @@ app.get('/fetch-options', async (req, res) => {
 });
 
 
-app.get('/get-options', async (req, res) => {
+app.get('/get-options', async (req, res) => { //get
     try {
         const options = await Option.findAll();
         res.json(options);
@@ -98,7 +98,7 @@ app.get('/get-options', async (req, res) => {
     }
 });
 
-app.get('/view-options', async (req, res) => {
+app.get('/view-options', async (req, res) => { //view
     try {
         const options = await Option.findAll();
         res.send(`<pre>${JSON.stringify(options, null, 2)}</pre`);
@@ -108,7 +108,7 @@ app.get('/view-options', async (req, res) => {
     }
 });
 
-app.get('/get-top-options', async (reg, res) => { // top 25 highest volume
+app.get('/get-top-options', async (reg, res) => { // top 150 highest volume
     try {
         const options = await Option.findAll({
             order: [['volume', 'DESC']],

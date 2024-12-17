@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize'); // this code is not needed, unless you need to verify data
 const path = require('path');
 
 const sequelize = new Sequelize({
