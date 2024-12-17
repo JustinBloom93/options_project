@@ -22,11 +22,11 @@ sequelize.sync().then(() => {
 
 app.get('/fetch-options', async (req, res) => {
     try {
-        // Clear existing records first, may not be most optimal but its helps speed it up
+        // Clear existing records first
         await Option.destroy({ where: {} });
         console.log('Existing data cleared.');
 
-        const fetchPromises = stockSymbols.map(symbol => {
+        const fetchPromises = stockSymbols.map(symbol => { // initial fetch from api
             const url = `https://www.alphavantage.co/query?function=HISTORICAL_OPTIONS&symbol=${symbol}&apikey=${apiKey}`;
             console.log(`Fetching data for ${symbol} from ${url}`);
 

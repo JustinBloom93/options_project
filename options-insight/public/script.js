@@ -26,7 +26,7 @@ function displayTopOptions(options) {
     options.forEach(option => {
         const row = document.createElement('tr');
 
-        ['symbol', 'type', 'strike', 'expiration', 'bid', 'ask', 'volume', 'open_interest'].forEach(field => {
+        ['symbol', 'type', 'strike', 'expiration', 'bid', 'ask', 'volume', 'open_interest'].forEach(field => { //table
             const cell = document.createElement('td');
             cell.textContent = option[field];
             row.appendChild(cell);
@@ -40,10 +40,10 @@ function displayTopOptions(options) {
 
 function startFetching() {
     fetchOptions();
-    setInterval(fetchOptions, 300000);
+    setInterval(fetchOptions, 300000); // fetch from database every 5 minutes
 }
 
-function filterOptions(query) {
+function filterOptions(query) { // search filter
     const filteredOptions = optionsData.filter(option => {
         return option.symbol.toLowerCase().includes(query.toLowerCase()) ||
                option.type.toLowerCase().includes(query.toLowerCase());
